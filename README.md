@@ -167,6 +167,90 @@ Add to GitHub Actions workflow:
   run: composer check
 ```
 
+### Publishing
+
+This plugin includes an automated publishing workflow to create releases following semantic versioning.
+
+#### Prerequisites
+
+**Node.js** - Required to run the publish script (v16 or higher)
+
+Install from https://nodejs.org/ or use a version manager like `nvm`.
+
+#### Publishing a New Version
+
+Run the interactive publishing workflow:
+
+```bash
+pnpm run publish-plugin
+```
+
+**The script will:**
+1. ✅ Check if git working tree is clean
+2. ✅ Run `composer check` (lint + static analysis)
+3. ✅ Prompt you to select version type (patch/minor/major) following semver
+4. ✅ Update version in `pilgrimz-tour-map.php` (header + constant)
+5. ✅ Commit changes with message: `chore: publish version X.Y.Z`
+6. ✅ Create git tag `vX.Y.Z`
+7. ✅ Push commits and tags to GitHub
+8. ✅ **GitHub Actions automatically creates the release** (no local `gh` CLI needed!)
+
+**Example:**
+```bash
+$ pnpm run publish-plugin
+
+🚀 WordPress Plugin Publishing Workflow
+==========================================
+
+Step 1: Checking git status...
+✅ Git working tree is clean
+
+Step 2: Running composer check...
+✅ Composer check passed
+
+Step 3: Version selection
+
+📦 Current version: 1.0.0
+
+Select version update type:
+1. Patch (1.0.1) - Bug fixes and minor changes
+2. Minor (1.1.0) - New features, backwards compatible
+3. Major (2.0.0) - Breaking changes
+4. Cancel
+
+Enter your choice (1-4): 1
+
+📋 Summary:
+   Version type: patch
+   New version: 1.0.1
+   Will commit, tag, and push to GitHub
+   GitHub Actions will automatically create the release
+
+Proceed with publishing? (y/n): y
+
+✨ Success! ✨
+==========================================
+📦 Version 1.0.1 has been published
+🏷️  Tag v1.0.1 created and pushed
+🚀 GitHub Actions will create the release automatically
+
+View releases: https://github.com/pilgrimz-dev/pilgrimz-tour-map-wp/releases
+```
+
+#### How It Works
+
+1. **Local script** - Updates version, commits, creates tag, and pushes to GitHub
+2. **GitHub Actions** - Automatically triggered when a version tag is pushed (`v*.*.*`)
+3. **Release created** - GitHub Actions creates the release with installation instructions
+
+See [.github/workflows/release.yml](.github/workflows/release.yml) for the automated release workflow.
+
+#### Semantic Versioning Guide
+
+- **Patch (X.Y.Z+1)**: Bug fixes, minor tweaks, no new features
+- **Minor (X.Y+1.0)**: New features, backwards compatible
+- **Major (X+1.0.0)**: Breaking changes, incompatible API changes
+
 
 ## Frequently Asked Questions
 

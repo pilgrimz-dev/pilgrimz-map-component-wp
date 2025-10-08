@@ -1,0 +1,22 @@
+{
+  "name": "pilgrimz-tour-map-wp",
+  "version": "1.0.0",
+  "description": "WordPress plugin for Pilgrimz tour maps - publishing scripts",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "lint": "composer lint",
+    "lint:fix": "composer lint:fix",
+    "analyze": "composer analyze",
+    "check": "composer check",
+    "verify": "composer check",
+    "publish-plugin": "node scripts/publish.mjs"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "pilgrimz"
+  ],
+  "license": "GPL-2.0-or-later"
+}
