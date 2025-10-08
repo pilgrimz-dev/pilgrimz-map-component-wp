@@ -19,7 +19,16 @@ jobs:
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
+      - name: Create distribution package
+        run: |
+          mkdir -p dist/pilgrimz-tour-map
+          cp pilgrimz-tour-map.php dist/pilgrimz-tour-map/
+          cp -r languages dist/pilgrimz-tour-map/
+          cd dist
+          zip -r pilgrimz-tour-map-${{ steps.get_version.outputs.VERSION }}.zip pilgrimz-tour-map
+
       - name: Create GitHub Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -31,8 +40,15 @@ jobs:
 
             ### Installation
 
-            1. Download the plugin files from this release
-            2. Upload to your WordPress `/wp-content/plugins/` directory
+            **Option 1: Download ZIP**
+            1. Download `pilgrimz-tour-map-${{ steps.get_version.outputs.VERSION }}.zip` from the Assets below
+            2. In WordPress admin, go to Plugins → Add New → Upload Plugin
+            3. Choose the downloaded ZIP file and click Install Now
+            4. Activate the plugin
+
+            **Option 2: Manual Installation**
+            1. Download and extract `pilgrimz-tour-map-${{ steps.get_version.outputs.VERSION }}.zip`
+            2. Upload the `pilgrimz-tour-map` folder to your WordPress `/wp-content/plugins/` directory
             3. Activate the plugin in WordPress admin
 
             ### Usage
@@ -48,3 +64,13 @@ jobs:
             **Changelog**: See commit history for details on what changed in this release.
           draft: false
           prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/pilgrimz-tour-map-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_name: pilgrimz-tour-map-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_content_type: application/zip
