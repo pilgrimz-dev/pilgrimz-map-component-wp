@@ -3,7 +3,7 @@
  * Plugin Name: Pilgrimz Tour Map
  * Plugin URI: https://pilgrimz.dev
  * Description: A WordPress plugin to embed Pilgrimz tour maps using a shortcode. Simply use [pilgrimz-tour-map tour-id="123"] to add an interactive tour map to your posts and pages.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Pilgrimz
  * Author URI: https://pilgrimz.dev
  * License: GPL v2 or later
@@ -22,7 +22,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Current plugin version.
  */
-define( 'PILGRIMZ_TOUR_MAP_VERSION', '1.0.0' );
+define( 'PILGRIMZ_TOUR_MAP_VERSION', '1.0.1' );
 define( 'PILGRIMZ_TOUR_MAP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PILGRIMZ_TOUR_MAP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
