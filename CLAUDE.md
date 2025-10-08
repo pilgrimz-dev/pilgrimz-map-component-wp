@@ -63,3 +63,57 @@ When updating the plugin version:
 1. Line 6: Plugin header comment `Version:`
 2. Line 23: `PILGRIMZ_TOUR_MAP_VERSION` constant
 3. README.md Changelog section
+
+## Code Quality Tools
+
+The plugin uses Composer-based PHP code quality tools for linting and static analysis.
+
+### Available Commands
+
+```bash
+composer install      # Install dev dependencies (one-time setup)
+composer lint         # Check code style with PHP_CodeSniffer (like ESLint)
+composer lint:fix     # Auto-fix code style issues with PHPCBF (like Prettier)
+composer analyze      # Static analysis with PHPStan (like TypeScript)
+composer check        # Run both lint + analyze (recommended before commits)
+```
+
+### Configuration Files
+
+- **composer.json**: Defines dev dependencies (PHPCS, WPCS, PHPStan, WordPress stubs) and scripts
+- **phpcs.xml**: PHP_CodeSniffer configuration
+  - WordPress Coding Standards
+  - PHP compatibility checks (7.4+)
+  - Text domain validation (`pilgrimz-tour-map`)
+  - Function prefix enforcement (`pilgrimz_tour_map_`)
+- **phpstan.neon**: PHPStan configuration
+  - Analysis level 5 (out of 9)
+  - WordPress function stubs to prevent false positives
+  - Memory limit: 512M
+
+### Development Workflow
+
+**Before committing changes:**
+```bash
+composer check
+```
+
+**If linting errors are found:**
+```bash
+composer lint:fix     # Auto-fix formatting
+composer lint         # Verify remaining issues
+```
+
+**Common linting issues that can't be auto-fixed:**
+- Missing `@package` tag in file header comment
+- Inline comments without punctuation (must end with `.`, `!`, or `?`)
+- Missing nonce verification warnings (expected for read-only operations)
+
+### Tool Equivalents
+
+| JavaScript (map-component) | PHP (wp plugin) |
+|---------------------------|-----------------|
+| `pnpm run lint` | `composer lint` |
+| `pnpm run format` | `composer lint:fix` |
+| `pnpm run typecheck` | `composer analyze` |
+| `pnpm run verify` | `composer check` |

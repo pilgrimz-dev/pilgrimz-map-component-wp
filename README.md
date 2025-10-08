@@ -107,13 +107,66 @@ The web component is a custom element `<pilgrimz-tour-map>` that accepts the fol
 pilgrimz-tour-map/
 ├── pilgrimz-tour-map.php  # Main plugin file
 ├── README.md              # This file
-└── languages/             # Translation files (future)
+├── CLAUDE.md              # AI assistant guidance
+├── composer.json          # PHP dependencies
+├── phpcs.xml              # Code style configuration
+├── phpstan.neon           # Static analysis configuration
+└── languages/             # Translation files
 ```
 
 ### Requirements
 
-- WordPress 5.0 or higher
-- PHP 7.0 or higher
+- WordPress 5.8 or higher
+- PHP 7.4 or higher
+
+### Code Quality Tools
+
+This plugin includes PHP code quality tools for linting, formatting, and static analysis.
+
+#### Tools Included
+
+- **PHP_CodeSniffer (PHPCS)** - Linting and code style checking
+- **PHP Code Beautifier and Fixer (PHPCBF)** - Auto-fix code style issues
+- **PHPStan** - Static analysis and type checking
+- **WordPress Coding Standards (WPCS)** - WordPress-specific rules
+
+#### Setup
+
+**Prerequisites**: Install Composer (PHP package manager)
+
+See https://getcomposer.org/download/
+
+
+**Install dependencies:**
+```bash
+composer install
+```
+
+#### Available Commands
+
+```bash
+composer lint          # Check code style
+composer lint:fix      # Auto-fix formatting issues
+composer analyze       # Static analysis
+composer check         # Run all checks (lint + analyze)
+```
+
+#### Configuration Files
+
+- **phpcs.xml** - PHP_CodeSniffer rules (WordPress Coding Standards, PHP 7.4+ compatibility)
+- **phpstan.neon** - PHPStan static analysis config (level 5)
+- **composer.json** - Dependencies and script definitions
+
+#### CI/CD Integration
+
+Add to GitHub Actions workflow:
+```yaml
+- name: Install Composer dependencies
+  run: composer install
+- name: Run code quality checks
+  run: composer check
+```
+
 
 ## Frequently Asked Questions
 

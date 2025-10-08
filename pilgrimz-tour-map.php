@@ -10,6 +10,8 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: pilgrimz-tour-map
  * Domain Path: /languages
+ *
+ * @package Pilgrimz_Tour_Map
  */
 
 // If this file is called directly, abort.
@@ -28,7 +30,7 @@ define( 'PILGRIMZ_TOUR_MAP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
  * Enqueue the web component script on the frontend.
  */
 function pilgrimz_tour_map_enqueue_scripts() {
-	// Only enqueue if shortcode is present in the content
+	// Only enqueue if shortcode is present in the content.
 	global $post;
 	if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'pilgrimz-tour-map' ) ) {
 		wp_enqueue_script(
@@ -37,7 +39,7 @@ function pilgrimz_tour_map_enqueue_scripts() {
 			array(),
 			PILGRIMZ_TOUR_MAP_VERSION,
 			array(
-				'strategy' => 'defer',
+				'strategy'  => 'defer',
 				'in_footer' => true,
 			)
 		);
@@ -53,7 +55,7 @@ add_action( 'wp_enqueue_scripts', 'pilgrimz_tour_map_enqueue_scripts' );
  */
 function pilgrimz_tour_map_get_language() {
 	$locale = get_locale();
-	// Extract the language code (first two characters)
+	// Extract the language code (first two characters).
 	$language = substr( $locale, 0, 2 );
 	return $language;
 }
@@ -65,25 +67,25 @@ function pilgrimz_tour_map_get_language() {
  * @return string HTML output for the tour map.
  */
 function pilgrimz_tour_map_shortcode( $atts ) {
-	// Parse shortcode attributes
+	// Parse shortcode attributes.
 	$atts = shortcode_atts(
 		array(
-			'tour-id' => '',
-			'language' => pilgrimz_tour_map_get_language(), // Auto-detect from WordPress
-			'hub' => '', // Optional, defaults to empty (will use component's default)
-			'width' => '', // Optional, for custom width
-			'height' => '', // Optional, for custom height
+			'tour-id'  => '',
+			'language' => pilgrimz_tour_map_get_language(), // Auto-detect from WordPress.
+			'hub'      => '', // Optional, defaults to empty (will use component's default).
+			'width'    => '', // Optional, for custom width.
+			'height'   => '', // Optional, for custom height.
 		),
 		$atts,
 		'pilgrimz-tour-map'
 	);
 
-	// Validate required attributes
+	// Validate required attributes.
 	if ( empty( $atts['tour-id'] ) ) {
 		return '<p style="color: red;">' . esc_html__( 'Error: tour-id attribute is required for the Pilgrimz Tour Map shortcode.', 'pilgrimz-tour-map' ) . '</p>';
 	}
 
-	// Get hub setting from options if not specified in shortcode
+	// Get hub setting from options if not specified in shortcode.
 	if ( empty( $atts['hub'] ) ) {
 		$hub_option = get_option( 'pilgrimz_tour_map_hub', '' );
 		if ( ! empty( $hub_option ) ) {
@@ -91,7 +93,7 @@ function pilgrimz_tour_map_shortcode( $atts ) {
 		}
 	}
 
-	// Build style attribute from width and height
+	// Build style attribute from width and height.
 	$style_parts = array();
 	if ( ! empty( $atts['width'] ) ) {
 		$style_parts[] = 'width: ' . esc_attr( $atts['width'] );
@@ -101,17 +103,17 @@ function pilgrimz_tour_map_shortcode( $atts ) {
 	}
 	$style_attr = ! empty( $style_parts ) ? ' style="' . implode( '; ', $style_parts ) . '"' : '';
 
-	// Build the web component HTML
-	$output = '<pilgrimz-tour-map';
+	// Build the web component HTML.
+	$output  = '<pilgrimz-tour-map';
 	$output .= ' tour-id="' . esc_attr( $atts['tour-id'] ) . '"';
 	$output .= ' language="' . esc_attr( $atts['language'] ) . '"';
 
-	// Only add hub attribute if it's not empty
+	// Only add hub attribute if it's not empty.
 	if ( ! empty( $atts['hub'] ) ) {
 		$output .= ' hub="' . esc_attr( $atts['hub'] ) . '"';
 	}
 
-	// Add style attribute if width or height specified
+	// Add style attribute if width or height specified.
 	$output .= $style_attr;
 
 	$output .= '></pilgrimz-tour-map>';
@@ -142,9 +144,9 @@ function pilgrimz_tour_map_register_settings() {
 		'pilgrimz_tour_map_settings',
 		'pilgrimz_tour_map_hub',
 		array(
-			'type' => 'string',
+			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
-			'default' => '',
+			'default'           => '',
 		)
 	);
 
@@ -185,12 +187,13 @@ function pilgrimz_tour_map_hub_field_callback() {
  * Settings page HTML.
  */
 function pilgrimz_tour_map_settings_page() {
-	// Check user capabilities
+	// Check user capabilities.
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
 
-	// Display success message if settings were saved
+	// Display success message if settings were saved.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Settings page check only.
 	if ( isset( $_GET['settings-updated'] ) ) {
 		add_settings_error(
 			'pilgrimz_tour_map_messages',
@@ -200,7 +203,7 @@ function pilgrimz_tour_map_settings_page() {
 		);
 	}
 
-	// Display errors/messages
+	// Display errors/messages.
 	settings_errors( 'pilgrimz_tour_map_messages' );
 	?>
 	<div class="wrap">
