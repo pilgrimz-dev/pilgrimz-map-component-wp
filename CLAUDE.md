@@ -6,6 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a WordPress plugin that embeds the Pilgrimz tour map web component into WordPress sites via a shortcode. The plugin is contained in a single PHP file with no build process required.
 
+## Cross-Project Work
+
+**If a task requires changes in a different project** (e.g., a Cloudflare worker, the Express API, Creators, the Expo app, etc.), you MUST:
+
+1. **Suggest spawning a dedicated agent** with its working directory set to the target project folder — this ensures the agent loads that project's CLAUDE.md, skills, and MCP servers automatically.
+2. **Let the user decide** — they can accept (recommended for full context) or decline and have you work without the project-specific context.
+
 ## Architecture
 
 **Single-File Plugin Structure**: All functionality is in `pilgrimz-tour-map.php` with no separate classes or files. This is intentional for simplicity and follows the WordPress pattern for lightweight plugins.
