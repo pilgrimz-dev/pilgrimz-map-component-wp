@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## MANDATORY: Maintain backward compatibility
+
+When working on **any** functionality, agents MUST ALWAYS preserve backward compatibility. Do **NOT** break API contracts, change behavior that other apps depend on (especially **Creators** and **Expo**), or introduce any breaking change unless the operator has **explicitly approved and asked** for it. This applies to every project in this monorepo and to every spawned agent/teammate.
+
+A "breaking change" is anything that could make an existing consumer stop working without changes on their side:
+
+- Removing, renaming, or retyping a field, column, RPC parameter, endpoint, query/header param, or response shape
+- Changing the meaning, units, defaults, or nullability of an existing value
+- Tightening validation, auth, permissions, or rate limits on an existing path
+- Removing or renaming a shared DB object (table, column, view, RPC, enum value) that other apps read
+- Changing event/payload formats consumed elsewhere (offline SQLite bundles, analytics ingest, webhooks, deep links)
+
+Prefer additive, non-destructive changes (new optional fields, new endpoints, versioned routes, defaults that preserve old behavior). When a change **cannot** avoid breaking compatibility, STOP and surface the trade-off plus a migration/additive alternative to the operator, then wait for explicit approval before proceeding.
+
 ## Project Overview
 
 This is a WordPress plugin that embeds the Pilgrimz tour map web component into WordPress sites via a shortcode. The plugin is contained in a single PHP file with no build process required.
