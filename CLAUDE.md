@@ -16,6 +16,16 @@ A "breaking change" is anything that could make an existing consumer stop workin
 
 Prefer additive, non-destructive changes (new optional fields, new endpoints, versioned routes, defaults that preserve old behavior). When a change **cannot** avoid breaking compatibility, STOP and surface the trade-off plus a migration/additive alternative to the operator, then wait for explicit approval before proceeding.
 
+## MANDATORY: Public repository
+
+This repository is public: its code, commit messages, issues, pull requests and comments are visible to anyone, including clients. Write all of them for a public reader:
+
+- No client or prospect names, no people's names, no internal contacts.
+- No secrets, credentials, internal hostnames, vault paths or prod data.
+- No internal workflow notes (autonomous runs, unsigned commits, re-signing, parked items, operator steps); keep those in `pilgrimz-workspace`.
+- Links to private repos (e.g. `pilgrimz-workspace` epics) are fine as references but must not be needed to understand the issue.
+- Describe security fixes by their effect once released, without exploit steps.
+
 ## Project Overview
 
 This is a WordPress plugin that embeds the Pilgrimz tour map web component into WordPress sites via a shortcode. The plugin is contained in a single PHP file with no build process required.
