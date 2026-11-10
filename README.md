@@ -295,7 +295,7 @@ For support, please contact the Pilgrimz team at https://pilgrimz.dev
 
 ## License
 
-This plugin is licensed under the GPL v2 or later.
+This plugin is licensed under the GPL v2 or later. See [LICENSE](LICENSE).
 
 ## Changelog
 
