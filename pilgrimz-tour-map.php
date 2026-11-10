@@ -130,6 +130,20 @@ function pilgrimz_tour_map_get_language() {
 }
 
 /**
+ * Return a CSS length value, or '' when it could inject extra CSS declarations.
+ *
+ * @param string $value Raw width or height attribute.
+ * @return string Trimmed value, or '' when rejected.
+ */
+function pilgrimz_tour_map_css_length( $value ) {
+	$value = trim( $value );
+	if ( preg_match( '/[;:{}"\'<>\\\\]|url\(/i', $value ) ) {
+		return '';
+	}
+	return $value;
+}
+
+/**
  * Shortcode callback function.
  *
  * @param array $atts Shortcode attributes.
@@ -154,11 +168,13 @@ function pilgrimz_tour_map_shortcode( $atts ) {
 
 	// Build style attribute from width and height.
 	$style_parts = array();
-	if ( ! empty( $atts['width'] ) ) {
-		$style_parts[] = 'width: ' . esc_attr( $atts['width'] );
+	$width       = pilgrimz_tour_map_css_length( $atts['width'] );
+	$height      = pilgrimz_tour_map_css_length( $atts['height'] );
+	if ( '' !== $width ) {
+		$style_parts[] = 'width: ' . esc_attr( $width );
 	}
-	if ( ! empty( $atts['height'] ) ) {
-		$style_parts[] = 'height: ' . esc_attr( $atts['height'] );
+	if ( '' !== $height ) {
+		$style_parts[] = 'height: ' . esc_attr( $height );
 	}
 	$style_attr = ! empty( $style_parts ) ? ' style="' . implode( '; ', $style_parts ) . '"' : '';
 

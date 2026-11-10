@@ -302,6 +302,7 @@ This plugin is licensed under the GPL v2 or later.
 ### 1.1.0
 - Add `map-type` shortcode attribute
 - Add `preview` shortcode attribute and site-wide setting (lightweight map loaded on click)
+- Ignore `width`/`height` values that contain CSS control characters or `url(`
 
 ### 1.0.1, 1.0.2
 - Version-only publishes; no changes recorded
