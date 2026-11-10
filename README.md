@@ -16,6 +16,10 @@ The Pilgrimz Tour Map plugin integrates the Pilgrimz web component into your Wor
 - ✅ Secure with proper sanitization and escaping
 - ✅ Performance optimized - only loads scripts when shortcode is used
 
+## Requirements / deploy order
+
+Plugin 1.1.0 needs the map component release that ships `pilgrimz-tour-map-preview.min.js` and the `map-type` values `streets`, `outdoors` and `light`. Publish it to mapcomponent.pilgrimz.dev before installing plugin 1.1.0.
+
 ## Installation
 
 1. Upload the `pilgrimz-tour-map` folder to the `/wp-content/plugins/` directory
@@ -38,6 +42,11 @@ Add a tour map to any post or page using the shortcode:
 - **tour-id** (required): The ID of the tour you want to display
 - **language** (optional): Language code (en, es, fr, etc.). Defaults to your WordPress site language
 - **hub** (optional): Custom hub code for personalized styling. Defaults to the hub configured in settings
+- **map-type** (optional): Base map style: `standard` (3D default), `streets` (flat colour), `outdoors` (flat colour with relief and trails), `light` (flat grey) or `satellite`. Omitted by default (component default)
+- **preview** (optional): `true`, `1` or `yes` renders `<pilgrimz-tour-map-preview>`, a static image that loads the full map only when the visitor clicks it. Defaults to the site-wide setting (off); `preview="false"` forces the full map
+- **width** / **height** (optional): CSS size of the map, e.g. `100%` / `500px`
+
+The preview avoids downloading the map script and tiles for visitors who never interact with it, which cuts page weight and energy use (eco-design). It can be enabled for every map in **Settings > Pilgrimz Tour Map**.
 
 ### Examples
 
@@ -56,12 +65,23 @@ Add a tour map to any post or page using the shortcode:
 [pilgrimz-tour-map tour-id="789" language="fr" hub="custom-hub"]
 ```
 
+**Light map style:**
+```
+[pilgrimz-tour-map tour-id="123" map-type="light"]
+```
+
+**Lightweight preview (map loads on click):**
+```
+[pilgrimz-tour-map tour-id="123" preview="true" height="400px"]
+```
+
 ## Admin Settings
 
 Navigate to **Settings > Pilgrimz Tour Map** in your WordPress admin panel to:
 
 1. View detailed usage instructions
 2. Configure a default hub code (provided by the Pilgrimz team)
+   and the site-wide lightweight preview mode
 3. See shortcode examples
 
 ### Hub Configuration
@@ -91,6 +111,9 @@ The web component is a custom element `<pilgrimz-tour-map>` that accepts the fol
 - `tour-id`: The tour identifier
 - `language`: The language code
 - `hub`: Optional hub code for customization
+- `map-type`: Optional base map style (`standard`, `streets`, `outdoors`, `light`, `satellite`)
+
+With `preview`, the plugin loads `https://mapcomponent.pilgrimz.dev/pilgrimz-tour-map-preview.min.js` instead and renders `<pilgrimz-tour-map-preview>` with the same attributes. Each script is enqueued only when at least one shortcode on the page needs it.
 
 ### WordPress Integration
 
@@ -275,6 +298,14 @@ For support, please contact the Pilgrimz team at https://pilgrimz.dev
 This plugin is licensed under the GPL v2 or later.
 
 ## Changelog
+
+### 1.1.0
+- Add `map-type` shortcode attribute
+- Add `preview` shortcode attribute and site-wide setting (lightweight map loaded on click)
+- Ignore `width`/`height` values that contain CSS control characters or `url(`
+
+### 1.0.1, 1.0.2
+- Version-only publishes; no changes recorded
 
 ### 1.0.0
 - Initial release
