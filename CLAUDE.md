@@ -32,21 +32,29 @@ This is a WordPress plugin that embeds the Pilgrimz tour map web component into 
 **Single-File Plugin Structure**: All functionality is in `pilgrimz-tour-map.php` with no separate classes or files. This is intentional for simplicity and follows the WordPress pattern for lightweight plugins.
 
 **Key Components**:
-1. **Shortcode Handler** (`pilgrimz_tour_map_shortcode`): Converts `[pilgrimz-tour-map]` shortcodes into `<pilgrimz-tour-map>` web component tags
-2. **Script Enqueuing** (`pilgrimz_tour_map_enqueue_scripts`): Conditionally loads the external web component script only when the shortcode is present on a page
-3. **Settings API Integration**: Uses WordPress Settings API for the admin configuration page (Settings > Pilgrimz Tour Map)
+1. **Shortcode Handler** (`pilgrimz_tour_map_shortcode`): Converts `[pilgrimz-tour-map]` shortcodes into `<pilgrimz-tour-map>` or `<pilgrimz-tour-map-preview>` web component tags
+2. **Script Enqueuing** (`pilgrimz_tour_map_enqueue_scripts`): Pre-scans the shortcodes in `post_content` and enqueues only the script(s) the page needs (full, preview, or both)
+3. **Settings API Integration**: Uses WordPress Settings API for the admin configuration page (Settings > Pilgrimz Tour Map), "Default Settings" section with the hub and lightweight preview options
 4. **Language Detection** (`pilgrimz_tour_map_get_language`): Auto-detects WordPress locale and extracts 2-letter language code
 
 ## External Dependencies
 
-**Web Component**: The plugin loads an external web component from:
-- URL: `https://mapcomponent.pilgrimz.dev/pilgrimz-tour-map.min.js`
-- Component tag: `<pilgrimz-tour-map>`
-- Component attributes: `tour-id`, `language`, `hub`
+**Web Component**: The plugin loads external scripts from `mapcomponent.pilgrimz.dev`:
 
-When updating the web component URL or tag name, update both:
-- Line 36: `wp_enqueue_script()` URL parameter
-- Lines 93-102: Component tag generation in `pilgrimz_tour_map_shortcode()`
+| Script handle | URL | Tag |
+| --- | --- | --- |
+| `pilgrimz-tour-map-component` (full) | `https://mapcomponent.pilgrimz.dev/pilgrimz-tour-map.min.js` | `<pilgrimz-tour-map>` |
+| `pilgrimz-tour-map-preview-component` | `https://mapcomponent.pilgrimz.dev/pilgrimz-tour-map-preview.min.js` | `<pilgrimz-tour-map-preview>` |
+
+Shortcode attributes: `tour-id`, `language`, `hub`, `width`, `height`, `map-type` (`standard`, `streets`, `outdoors`, `light`, `satellite`), `preview`. Both tags receive the same attributes.
+
+- Attribute defaults: `pilgrimz_tour_map_parse_atts()`
+- `preview` rule: `pilgrimz_tour_map_is_preview()` (empty uses the site option `pilgrimz_tour_map_preview`; `false`/`0`/`no` is off; any other value is on)
+- `width`/`height` are filtered by `pilgrimz_tour_map_css_length()`
+
+When changing a script URL, handle or tag name, update both `pilgrimz_tour_map_enqueue_scripts()` and the tag generation in `pilgrimz_tour_map_shortcode()`.
+
+**Deploy order**: the map component release must be published to mapcomponent.pilgrimz.dev before the plugin release that relies on it.
 
 ## Settings Hierarchy
 
@@ -74,15 +82,18 @@ To test this plugin:
 ## Key Functions
 
 - `pilgrimz_tour_map_shortcode()`: Main shortcode handler - generates web component HTML
-- `pilgrimz_tour_map_enqueue_scripts()`: Conditional script loading (only when shortcode detected)
+- `pilgrimz_tour_map_parse_atts()`: Merges shortcode attributes with their defaults
+- `pilgrimz_tour_map_is_preview()`: Decides full map vs preview for a `preview` value
+- `pilgrimz_tour_map_css_length()`: Rejects `width`/`height` values that could inject CSS
+- `pilgrimz_tour_map_enqueue_scripts()`: Enqueues only the script(s) the page's shortcodes need
 - `pilgrimz_tour_map_get_language()`: Extracts 2-char language code from WordPress locale
 - `pilgrimz_tour_map_settings_page()`: Renders admin settings page with usage instructions
 
 ## Version Updates
 
 When updating the plugin version:
-1. Line 6: Plugin header comment `Version:`
-2. Line 23: `PILGRIMZ_TOUR_MAP_VERSION` constant
+1. Plugin header comment `Version:`
+2. `PILGRIMZ_TOUR_MAP_VERSION` constant
 3. README.md Changelog section
 
 ## Code Quality Tools
