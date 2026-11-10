@@ -3,7 +3,7 @@
  * Plugin Name: Pilgrimz Tour Map
  * Plugin URI: https://pilgrimz.dev
  * Description: A WordPress plugin to embed Pilgrimz tour maps using a shortcode. Simply use [pilgrimz-tour-map tour-id="123"] to add an interactive tour map to your posts and pages.
- * Version: 1.0.2
+ * Version: 1.1.0
  * Author: Pilgrimz
  * Author URI: https://pilgrimz.dev
  * License: GPL v2 or later
@@ -22,26 +22,95 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Current plugin version.
  */
-define( 'PILGRIMZ_TOUR_MAP_VERSION', '1.0.2' );
+define( 'PILGRIMZ_TOUR_MAP_VERSION', '1.1.0' );
 define( 'PILGRIMZ_TOUR_MAP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PILGRIMZ_TOUR_MAP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Enqueue the web component script on the frontend.
+ * Whether a shortcode `preview` value turns the lightweight preview on.
+ * An empty value falls back to the site-wide setting; "false", "0" and "no"
+ * turn it off; any other value turns it on.
+ *
+ * @param string $value Raw `preview` shortcode attribute.
+ * @return bool
+ */
+function pilgrimz_tour_map_is_preview( $value ) {
+	$value = strtolower( trim( $value ) );
+	if ( '' === $value ) {
+		return (bool) get_option( 'pilgrimz_tour_map_preview', false );
+	}
+	return ! in_array( $value, array( 'false', '0', 'no' ), true );
+}
+
+/**
+ * Parse raw shortcode attributes against the shortcode defaults.
+ *
+ * @param array|string $atts Raw shortcode attributes.
+ * @return array Attributes merged with defaults.
+ */
+function pilgrimz_tour_map_parse_atts( $atts ) {
+	return shortcode_atts(
+		array(
+			'tour-id'  => '',
+			'language' => pilgrimz_tour_map_get_language(), // Auto-detect from WordPress.
+			'hub'      => '', // Optional, defaults to empty (will use component's default).
+			'width'    => '', // Optional, for custom width.
+			'height'   => '', // Optional, for custom height.
+			'map-type' => '', // Optional: standard, satellite or light.
+			'preview'  => '', // Optional: true to load the map on click; empty uses the site setting.
+		),
+		$atts,
+		'pilgrimz-tour-map'
+	);
+}
+
+/**
+ * Enqueue the web component scripts on the frontend.
+ * The full script loads when at least one shortcode renders the full map,
+ * the preview script when at least one renders the preview.
  */
 function pilgrimz_tour_map_enqueue_scripts() {
-	// Only enqueue if shortcode is present in the content.
 	global $post;
-	if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'pilgrimz-tour-map' ) ) {
+	if ( ! is_a( $post, 'WP_Post' ) || ! has_shortcode( $post->post_content, 'pilgrimz-tour-map' ) ) {
+		return;
+	}
+
+	$needs_full    = false;
+	$needs_preview = false;
+	preg_match_all( '/' . get_shortcode_regex( array( 'pilgrimz-tour-map' ) ) . '/', $post->post_content, $matches, PREG_SET_ORDER );
+	foreach ( $matches as $match ) {
+		// "[[shortcode]]" is an escaped literal and renders no map.
+		if ( '[' === $match[1] && ']' === $match[6] ) {
+			continue;
+		}
+		$atts = pilgrimz_tour_map_parse_atts( shortcode_parse_atts( $match[3] ) );
+		if ( pilgrimz_tour_map_is_preview( $atts['preview'] ) ) {
+			$needs_preview = true;
+		} else {
+			$needs_full = true;
+		}
+	}
+
+	$script_args = array(
+		'strategy'  => 'defer',
+		'in_footer' => true,
+	);
+	if ( $needs_full ) {
 		wp_enqueue_script(
 			'pilgrimz-tour-map-component',
 			'https://mapcomponent.pilgrimz.dev/pilgrimz-tour-map.min.js',
 			array(),
 			PILGRIMZ_TOUR_MAP_VERSION,
-			array(
-				'strategy'  => 'defer',
-				'in_footer' => true,
-			)
+			$script_args
+		);
+	}
+	if ( $needs_preview ) {
+		wp_enqueue_script(
+			'pilgrimz-tour-map-preview-component',
+			'https://mapcomponent.pilgrimz.dev/pilgrimz-tour-map-preview.min.js',
+			array(),
+			PILGRIMZ_TOUR_MAP_VERSION,
+			$script_args
 		);
 	}
 }
@@ -68,17 +137,7 @@ function pilgrimz_tour_map_get_language() {
  */
 function pilgrimz_tour_map_shortcode( $atts ) {
 	// Parse shortcode attributes.
-	$atts = shortcode_atts(
-		array(
-			'tour-id'  => '',
-			'language' => pilgrimz_tour_map_get_language(), // Auto-detect from WordPress.
-			'hub'      => '', // Optional, defaults to empty (will use component's default).
-			'width'    => '', // Optional, for custom width.
-			'height'   => '', // Optional, for custom height.
-		),
-		$atts,
-		'pilgrimz-tour-map'
-	);
+	$atts = pilgrimz_tour_map_parse_atts( $atts );
 
 	// Validate required attributes.
 	if ( empty( $atts['tour-id'] ) ) {
@@ -104,7 +163,8 @@ function pilgrimz_tour_map_shortcode( $atts ) {
 	$style_attr = ! empty( $style_parts ) ? ' style="' . implode( '; ', $style_parts ) . '"' : '';
 
 	// Build the web component HTML.
-	$output  = '<pilgrimz-tour-map';
+	$tag     = pilgrimz_tour_map_is_preview( $atts['preview'] ) ? 'pilgrimz-tour-map-preview' : 'pilgrimz-tour-map';
+	$output  = '<' . $tag;
 	$output .= ' tour-id="' . esc_attr( $atts['tour-id'] ) . '"';
 	$output .= ' language="' . esc_attr( $atts['language'] ) . '"';
 
@@ -113,10 +173,14 @@ function pilgrimz_tour_map_shortcode( $atts ) {
 		$output .= ' hub="' . esc_attr( $atts['hub'] ) . '"';
 	}
 
+	if ( ! empty( $atts['map-type'] ) ) {
+		$output .= ' map-type="' . esc_attr( $atts['map-type'] ) . '"';
+	}
+
 	// Add style attribute if width or height specified.
 	$output .= $style_attr;
 
-	$output .= '></pilgrimz-tour-map>';
+	$output .= '></' . $tag . '>';
 
 	return $output;
 }
@@ -150,9 +214,19 @@ function pilgrimz_tour_map_register_settings() {
 		)
 	);
 
+	register_setting(
+		'pilgrimz_tour_map_settings',
+		'pilgrimz_tour_map_preview',
+		array(
+			'type'              => 'boolean',
+			'sanitize_callback' => 'rest_sanitize_boolean',
+			'default'           => false,
+		)
+	);
+
 	add_settings_section(
 		'pilgrimz_tour_map_main_section',
-		__( 'Hub Configuration', 'pilgrimz-tour-map' ),
+		__( 'Default Settings', 'pilgrimz-tour-map' ),
 		'pilgrimz_tour_map_section_callback',
 		'pilgrimz-tour-map'
 	);
@@ -164,6 +238,14 @@ function pilgrimz_tour_map_register_settings() {
 		'pilgrimz-tour-map',
 		'pilgrimz_tour_map_main_section'
 	);
+
+	add_settings_field(
+		'pilgrimz_tour_map_preview',
+		__( 'Lightweight Preview', 'pilgrimz-tour-map' ),
+		'pilgrimz_tour_map_preview_field_callback',
+		'pilgrimz-tour-map',
+		'pilgrimz_tour_map_main_section'
+	);
 }
 add_action( 'admin_init', 'pilgrimz_tour_map_register_settings' );
 
@@ -171,7 +253,7 @@ add_action( 'admin_init', 'pilgrimz_tour_map_register_settings' );
  * Settings section callback.
  */
 function pilgrimz_tour_map_section_callback() {
-	echo '<p>' . esc_html__( 'Configure the default hub for your tour maps. The Pilgrimz team will provide you with a hub code for a personalized look and feel. Leave blank to use the default appearance.', 'pilgrimz-tour-map' ) . '</p>';
+	echo '<p>' . esc_html__( 'Configure the defaults for your tour maps. The Pilgrimz team provides the hub code for a personalized look and feel; leave it blank for the default appearance. The lightweight preview loads the full map only on click.', 'pilgrimz-tour-map' ) . '</p>';
 }
 
 /**
@@ -181,6 +263,15 @@ function pilgrimz_tour_map_hub_field_callback() {
 	$hub = get_option( 'pilgrimz_tour_map_hub', '' );
 	echo '<input type="text" id="pilgrimz_tour_map_hub" name="pilgrimz_tour_map_hub" value="' . esc_attr( $hub ) . '" class="regular-text" />';
 	echo '<p class="description">' . esc_html__( 'Enter your custom hub code provided by the Pilgrimz team, or leave blank for the default look and feel.', 'pilgrimz-tour-map' ) . '</p>';
+}
+
+/**
+ * Preview field callback.
+ */
+function pilgrimz_tour_map_preview_field_callback() {
+	$preview = get_option( 'pilgrimz_tour_map_preview', false );
+	echo '<label><input type="checkbox" id="pilgrimz_tour_map_preview" name="pilgrimz_tour_map_preview" value="1"' . checked( (bool) $preview, true, false ) . ' /> ' . esc_html__( 'Load the map on click (lightweight preview)', 'pilgrimz-tour-map' ) . '</label>';
+	echo '<p class="description">' . esc_html__( 'Shows a static image and loads the full map only when a visitor clicks it. Use preview="false" in a shortcode to override.', 'pilgrimz-tour-map' ) . '</p>';
 }
 
 /**
@@ -219,7 +310,9 @@ function pilgrimz_tour_map_settings_page() {
 				<li><strong>tour-id</strong> (required): <?php esc_html_e( 'The ID of the tour you want to display.', 'pilgrimz-tour-map' ); ?></li>
 				<li><strong>language</strong> (optional): <?php esc_html_e( 'The language code (en, es, fr, etc.). Defaults to your WordPress site language.', 'pilgrimz-tour-map' ); ?></li>
 				<li><strong>width</strong> (optional): <?php esc_html_e( 'Map width (e.g., "100%", "800px"). The map will adapt to its container size.', 'pilgrimz-tour-map' ); ?></li>
-				<li><strong>height</strong> (optional): <?php esc_html_e( 'Map height (e.g., "600px", "80vh"). Defaults to 600px if not specified.', 'pilgrimz-tour-map' ); ?></li>
+				<li><strong>height</strong> (optional): <?php esc_html_e( 'Map height (e.g., "600px", "80vh"). The map has a minimum height of 300px when no height is given.', 'pilgrimz-tour-map' ); ?></li>
+				<li><strong>map-type</strong> (optional): <?php esc_html_e( 'Base map style: "standard", "satellite" or "light".', 'pilgrimz-tour-map' ); ?></li>
+				<li><strong>preview</strong> (optional): <?php esc_html_e( 'Set to "true" to show a static image and load the full map only on click. Overrides the site-wide setting.', 'pilgrimz-tour-map' ); ?></li>
 			</ul>
 			<p><em><?php esc_html_e( 'Note: The map automatically adapts to the size of its container and is fully responsive.', 'pilgrimz-tour-map' ); ?></em></p>
 
@@ -227,6 +320,7 @@ function pilgrimz_tour_map_settings_page() {
 			<p><code>[pilgrimz-tour-map tour-id="123"]</code> - <?php esc_html_e( 'Basic usage with auto-detected language', 'pilgrimz-tour-map' ); ?></p>
 			<p><code>[pilgrimz-tour-map tour-id="123" language="es"]</code> - <?php esc_html_e( 'Spanish language tour', 'pilgrimz-tour-map' ); ?></p>
 			<p><code>[pilgrimz-tour-map tour-id="123" width="100%" height="500px"]</code> - <?php esc_html_e( 'Custom map dimensions', 'pilgrimz-tour-map' ); ?></p>
+			<p><code>[pilgrimz-tour-map tour-id="123" preview="true"]</code> - <?php esc_html_e( 'Lightweight preview, the map loads on click', 'pilgrimz-tour-map' ); ?></p>
 		</div>
 
 		<form action="options.php" method="post" style="margin-top: 30px;">
