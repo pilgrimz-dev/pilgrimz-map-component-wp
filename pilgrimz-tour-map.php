@@ -56,7 +56,7 @@ function pilgrimz_tour_map_parse_atts( $atts ) {
 			'hub'      => '', // Optional, defaults to empty (will use component's default).
 			'width'    => '', // Optional, for custom width.
 			'height'   => '', // Optional, for custom height.
-			'map-type' => '', // Optional: standard, satellite or light.
+			'map-type' => '', // Optional: standard, streets, outdoors, light or satellite.
 			'preview'  => '', // Optional: true to load the map on click; empty uses the site setting.
 		),
 		$atts,
@@ -311,7 +311,7 @@ function pilgrimz_tour_map_settings_page() {
 				<li><strong>language</strong> (optional): <?php esc_html_e( 'The language code (en, es, fr, etc.). Defaults to your WordPress site language.', 'pilgrimz-tour-map' ); ?></li>
 				<li><strong>width</strong> (optional): <?php esc_html_e( 'Map width (e.g., "100%", "800px"). The map will adapt to its container size.', 'pilgrimz-tour-map' ); ?></li>
 				<li><strong>height</strong> (optional): <?php esc_html_e( 'Map height (e.g., "600px", "80vh"). The map has a minimum height of 300px when no height is given.', 'pilgrimz-tour-map' ); ?></li>
-				<li><strong>map-type</strong> (optional): <?php esc_html_e( 'Base map style: "standard", "satellite" or "light".', 'pilgrimz-tour-map' ); ?></li>
+				<li><strong>map-type</strong> (optional): <?php esc_html_e( 'Base map style: "standard", "streets", "outdoors", "light" or "satellite".', 'pilgrimz-tour-map' ); ?></li>
 				<li><strong>preview</strong> (optional): <?php esc_html_e( 'Set to "true" to show a static image and load the full map only on click. Overrides the site-wide setting.', 'pilgrimz-tour-map' ); ?></li>
 			</ul>
 			<p><em><?php esc_html_e( 'Note: The map automatically adapts to the size of its container and is fully responsive.', 'pilgrimz-tour-map' ); ?></em></p>

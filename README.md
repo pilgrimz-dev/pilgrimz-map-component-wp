@@ -18,7 +18,7 @@ The Pilgrimz Tour Map plugin integrates the Pilgrimz web component into your Wor
 
 ## Requirements / deploy order
 
-Plugin 1.1.0 needs the map component release that ships `pilgrimz-tour-map-preview.min.js` and `map-type="light"`. Publish it to mapcomponent.pilgrimz.dev before installing plugin 1.1.0.
+Plugin 1.1.0 needs the map component release that ships `pilgrimz-tour-map-preview.min.js` and the `map-type` values `streets`, `outdoors` and `light`. Publish it to mapcomponent.pilgrimz.dev before installing plugin 1.1.0.
 
 ## Installation
 
@@ -42,7 +42,7 @@ Add a tour map to any post or page using the shortcode:
 - **tour-id** (required): The ID of the tour you want to display
 - **language** (optional): Language code (en, es, fr, etc.). Defaults to your WordPress site language
 - **hub** (optional): Custom hub code for personalized styling. Defaults to the hub configured in settings
-- **map-type** (optional): Base map style: `standard`, `satellite` or `light`. Omitted by default (component default)
+- **map-type** (optional): Base map style: `standard` (3D default), `streets` (flat colour), `outdoors` (flat colour with relief and trails), `light` (flat grey) or `satellite`. Omitted by default (component default)
 - **preview** (optional): `true`, `1` or `yes` renders `<pilgrimz-tour-map-preview>`, a static image that loads the full map only when the visitor clicks it. Defaults to the site-wide setting (off); `preview="false"` forces the full map
 - **width** / **height** (optional): CSS size of the map, e.g. `100%` / `500px`
 
@@ -111,7 +111,7 @@ The web component is a custom element `<pilgrimz-tour-map>` that accepts the fol
 - `tour-id`: The tour identifier
 - `language`: The language code
 - `hub`: Optional hub code for customization
-- `map-type`: Optional base map style (`standard`, `satellite`, `light`)
+- `map-type`: Optional base map style (`standard`, `streets`, `outdoors`, `light`, `satellite`)
 
 With `preview`, the plugin loads `https://mapcomponent.pilgrimz.dev/pilgrimz-tour-map-preview.min.js` instead and renders `<pilgrimz-tour-map-preview>` with the same attributes. Each script is enqueued only when at least one shortcode on the page needs it.
 
