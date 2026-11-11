@@ -2,10 +2,10 @@
 # Copyright (C) 2025 Pilgrimz
 msgid ""
 msgstr ""
-"Project-Id-Version: Pilgrimz Tour Map 1.0.0\n"
-"Report-Msgid-Bugs-To: https://pilgrimz.dev\n"
-"POT-Creation-Date: 2025-01-01 00:00+0000\n"
-"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"Project-Id-Version: Pilgrimz Tour Map 1.1.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 09:34+0100\n"
+"PO-Revision-Date: 2026-11-11 09:40+0100\n"
 "Last-Translator: Pilgrimz <contact@pilgrimz.dev>\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -14,86 +14,156 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: pilgrimz-tour-map.php:81
-msgid "Error: tour-id attribute is required for the Pilgrimz Tour Map shortcode."
-msgstr "Erreur : l'attribut tour-id est requis pour le shortcode Pilgrimz Tour Map."
+#: pilgrimz-tour-map.php:158
+msgid ""
+"Error: tour-id attribute is required for the Pilgrimz Tour Map shortcode."
+msgstr ""
+"Erreur : l'attribut tour-id est requis pour le shortcode Pilgrimz Tour Map."
 
-#: pilgrimz-tour-map.php:113
+#: pilgrimz-tour-map.php:210
 msgid "Pilgrimz Tour Map Settings"
 msgstr "Paramètres Pilgrimz Tour Map"
 
-#: pilgrimz-tour-map.php:114
+#: pilgrimz-tour-map.php:211
 msgid "Pilgrimz Tour Map"
 msgstr "Pilgrimz Tour Map"
 
-#: pilgrimz-tour-map.php:138
-msgid "Hub Configuration"
-msgstr "Configuration du Hub"
+#: pilgrimz-tour-map.php:245
+msgid "Default Settings"
+msgstr "Réglages par défaut"
 
-#: pilgrimz-tour-map.php:145
+#: pilgrimz-tour-map.php:252
 msgid "Hub Code"
 msgstr "Code Hub"
 
-#: pilgrimz-tour-map.php:157
-msgid "Configure the default hub for your tour maps. The Pilgrimz team will provide you with a hub code for a personalized look and feel. Leave blank to use the default appearance."
-msgstr "Configurez le hub par défaut pour vos cartes de visite. L'équipe Pilgrimz vous fournira un code hub pour un aspect personnalisé. Laissez vide pour utiliser l'apparence par défaut."
+#: pilgrimz-tour-map.php:260
+msgid "Lightweight Preview"
+msgstr "Aperçu allégé"
 
-#: pilgrimz-tour-map.php:166
-msgid "Enter your custom hub code provided by the Pilgrimz team, or leave blank for the default look and feel."
-msgstr "Entrez votre code hub personnalisé fourni par l'équipe Pilgrimz, ou laissez vide pour l'apparence par défaut."
+#: pilgrimz-tour-map.php:272
+msgid ""
+"Configure the defaults for your tour maps. The Pilgrimz team provides the "
+"hub code for a personalized look and feel; leave it blank for the default "
+"appearance. The lightweight preview loads the full map only on click."
+msgstr ""
+"Configurez les réglages par défaut de vos cartes de parcours. L'équipe "
+"Pilgrimz fournit le code hub pour une apparence personnalisée ; laissez-le "
+"vide pour l'apparence par défaut. L'aperçu allégé ne charge la carte "
+"complète qu'au clic."
 
-#: pilgrimz-tour-map.php:183
+#: pilgrimz-tour-map.php:281
+msgid ""
+"Enter your custom hub code provided by the Pilgrimz team, or leave blank for "
+"the default look and feel."
+msgstr ""
+"Entrez votre code hub personnalisé fourni par l'équipe Pilgrimz, ou laissez "
+"vide pour l'apparence par défaut."
+
+#: pilgrimz-tour-map.php:289
+msgid "Load the map on click (lightweight preview)"
+msgstr "Charger la carte au clic (aperçu allégé)"
+
+#: pilgrimz-tour-map.php:290
+msgid ""
+"Shows a static image and loads the full map only when a visitor clicks it. "
+"Use preview=\"false\" in a shortcode to override."
+msgstr ""
+"Affiche une image statique et ne charge la carte complète que lorsqu'un "
+"visiteur clique dessus. Utilisez preview=\"false\" dans un shortcode pour la "
+"désactiver."
+
+#: pilgrimz-tour-map.php:308
 msgid "Settings Saved"
 msgstr "Paramètres enregistrés"
 
-#: pilgrimz-tour-map.php:195
+#: pilgrimz-tour-map.php:320
 msgid "How to Use the Shortcode"
 msgstr "Comment utiliser le shortcode"
 
-#: pilgrimz-tour-map.php:196
-msgid "To add a Pilgrimz tour map to your posts or pages, use the following shortcode:"
-msgstr "Pour ajouter une carte de visite Pilgrimz à vos articles ou pages, utilisez le shortcode suivant :"
+#: pilgrimz-tour-map.php:321
+msgid ""
+"To add a Pilgrimz tour map to your posts or pages, use the following "
+"shortcode:"
+msgstr ""
+"Pour ajouter une carte de visite Pilgrimz à vos articles ou pages, utilisez "
+"le shortcode suivant :"
 
-#: pilgrimz-tour-map.php:199
+#: pilgrimz-tour-map.php:324
 msgid "Shortcode Parameters"
 msgstr "Paramètres du shortcode"
 
-#: pilgrimz-tour-map.php:201
+#: pilgrimz-tour-map.php:326
 msgid "The ID of the tour you want to display."
 msgstr "L'identifiant de la visite que vous souhaitez afficher."
 
-#: pilgrimz-tour-map.php:202
-msgid "The language code (en, es, fr, etc.). Defaults to your WordPress site language."
-msgstr "Le code de langue (en, es, fr, etc.). Par défaut, la langue de votre site WordPress."
+#: pilgrimz-tour-map.php:327
+msgid ""
+"The language code (en, es, fr, etc.). Defaults to your WordPress site "
+"language."
+msgstr ""
+"Le code de langue (en, es, fr, etc.). Par défaut, la langue de votre site "
+"WordPress."
 
-#: pilgrimz-tour-map.php:203
-msgid "Map width (e.g., \"100%\", \"800px\"). The map will adapt to its container size."
-msgstr "Largeur de la carte (ex : \"100%\", \"800px\"). La carte s'adaptera à la taille de son conteneur."
+#: pilgrimz-tour-map.php:328
+msgid ""
+"Map width (e.g., \"100%\", \"800px\"). The map will adapt to its container "
+"size."
+msgstr ""
+"Largeur de la carte (ex : \"100%\", \"800px\"). La carte s'adaptera à la "
+"taille de son conteneur."
 
-#: pilgrimz-tour-map.php:204
-msgid "Map height (e.g., \"600px\", \"80vh\"). Defaults to 600px if not specified."
-msgstr "Hauteur de la carte (ex : \"600px\", \"80vh\"). Par défaut 600px si non spécifié."
+#: pilgrimz-tour-map.php:329
+msgid ""
+"Map height (e.g., \"600px\", \"80vh\"). The map has a minimum height of "
+"300px when no height is given."
+msgstr ""
+"Hauteur de la carte (par ex. « 600px », « 80vh »). Sans hauteur indiquée, la "
+"carte mesure au moins 300px de haut."
 
-#: pilgrimz-tour-map.php:206
-msgid "Note: The map automatically adapts to the size of its container and is fully responsive."
-msgstr "Remarque : La carte s'adapte automatiquement à la taille de son conteneur et est entièrement responsive."
+#: pilgrimz-tour-map.php:330
+msgid ""
+"Base map style: \"standard\", \"streets\", \"outdoors\", \"light\" or "
+"\"satellite\"."
+msgstr ""
+"Style du fond de carte : « standard », « streets », « outdoors », « light » "
+"ou « satellite »."
 
-#: pilgrimz-tour-map.php:208
+#: pilgrimz-tour-map.php:331
+msgid ""
+"Set to \"true\" to show a static image and load the full map only on click. "
+"Overrides the site-wide setting."
+msgstr ""
+"Indiquez « true » pour afficher une image statique et ne charger la carte "
+"complète qu'au clic. Remplace le réglage du site."
+
+#: pilgrimz-tour-map.php:333
+msgid ""
+"Note: The map automatically adapts to the size of its container and is fully "
+"responsive."
+msgstr ""
+"Remarque : La carte s'adapte automatiquement à la taille de son conteneur et "
+"est entièrement responsive."
+
+#: pilgrimz-tour-map.php:335
 msgid "Examples"
 msgstr "Exemples"
 
-#: pilgrimz-tour-map.php:209
+#: pilgrimz-tour-map.php:336
 msgid "Basic usage with auto-detected language"
 msgstr "Utilisation basique avec détection automatique de la langue"
 
-#: pilgrimz-tour-map.php:210
+#: pilgrimz-tour-map.php:337
 msgid "Spanish language tour"
 msgstr "Visite en espagnol"
 
-#: pilgrimz-tour-map.php:211
+#: pilgrimz-tour-map.php:338
 msgid "Custom map dimensions"
 msgstr "Dimensions personnalisées de la carte"
 
-#: pilgrimz-tour-map.php:216
+#: pilgrimz-tour-map.php:339
+msgid "Lightweight preview, the map loads on click"
+msgstr "Aperçu allégé, la carte se charge au clic"
+
+#: pilgrimz-tour-map.php:346
 msgid "Save Settings"
 msgstr "Enregistrer les paramètres"

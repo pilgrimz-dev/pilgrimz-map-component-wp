@@ -299,6 +299,9 @@ This plugin is licensed under the GPL v2 or later. See [LICENSE](LICENSE).
 
 ## Changelog
 
+### 1.1.1
+- French and Spanish admin translations for the preview setting and new shortcode options
+
 ### 1.1.0
 - Add `map-type` shortcode attribute
 - Add `preview` shortcode attribute and site-wide setting (lightweight map loaded on click)
